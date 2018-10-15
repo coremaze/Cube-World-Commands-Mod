@@ -96,13 +96,13 @@ wchar_t* DLL_EXPORT HandleMessage(wchar_t msg[]){
             *x = targetx;
             *y = targety;
             *z = targetz;
-            swprintf(response, L"Teleporting.", targetx);
+            swprintf(response, L"Teleporting.\n");
             return response;
         }
         else if ( swscanf(msg, L"/tpch %llu %llu", &targetx, &targety) == 2){
             *x = targetx * 0x1000000;
             *y = targety * 0x1000000;
-            swprintf(response, L"Teleporting.", targetx);
+            swprintf(response, L"Teleporting.\n");
             return response;
         }
 
@@ -132,7 +132,7 @@ extern "C" DLL_EXPORT BOOL APIENTRY DllMain(HINSTANCE hinstDLL, DWORD fdwReason,
     {
 
         case DLL_PROCESS_ATTACH:
-            WriteJMP((BYTE*)(base + 0x7E61A), (BYTE*)&ASMHandleMessage); //This code forces the server to generate the correct chunk
+            WriteJMP((BYTE*)(base + 0x7E61A), (BYTE*)&ASMHandleMessage);
 
             break;
 ;
