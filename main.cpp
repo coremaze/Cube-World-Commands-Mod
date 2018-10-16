@@ -20,7 +20,7 @@ class Color{
 Color defaultColor = Color(1.0, 1.0, 1.0, 1.0);
 DWORD defaultColorPtr = (DWORD)&defaultColor;
 
-wchar_t defaultMessage[255];
+wchar_t defaultMessage[1024];
 DWORD defaultMessagePtr = (DWORD)&defaultMessage;
 
 char msgObject[255];
@@ -28,11 +28,19 @@ DWORD msgObjectPtr = (DWORD)&msgObject;
 
 _declspec(naked) void DLL_EXPORT ASMHandleMessage(){
 
-    //asm("lea eax, [ebp - 0x50]");
-    asm("lea eax, [ebp- 0x128 + 0x4]");
+    asm("mov eax, [_base]");
+    asm("add eax, 0x36B1C8");
+    asm("mov eax, [eax]"); //eax points to gamecontroller
+    asm("mov eax, dword ptr [eax + 0x800A14]"); //eax points to ChatWidget
+    asm("mov eax, dword ptr [eax + 0x178]"); //get message size
+    asm("push eax");
+
+    asm("lea eax, [ebp - 0x128 + 0x4]");
     asm("mov eax, [eax]"); //get message
     asm("push eax");
+
     asm("call [_HandleMessagePtr]");
+
     asm("cmp eax, 0"); //message ptr
     asm("je 0f");
 
@@ -103,8 +111,11 @@ void CommandsModMessage(wchar_t message[]){
     PrintMessage(message);
 }
 
-bool DLL_EXPORT HandleMessage(wchar_t msg[]){
+bool DLL_EXPORT HandleMessage(wchar_t buf[], unsigned int msg_size){
     wchar_t response[255];
+    wchar_t msg[1024] = { 0 };
+    memcpy(msg, buf, msg_size * 2); //the message should be null terminated
+
     DWORD entityaddr = (DWORD)(base + 0x36b1c8);
     entityaddr = *(DWORD*)entityaddr;
     entityaddr += 0x39C;
@@ -122,6 +133,7 @@ bool DLL_EXPORT HandleMessage(wchar_t msg[]){
         PrintMessage(L"/chunks - displays your coordinates in terms of chunks\n");
         PrintMessage(L"/tp <x> <y> <z> - teleports you in terms of absolute coordinates\n");
         PrintMessage(L"/tpch <chunk x> <chunk y> - teleports you in terms of chunks\n");
+        PrintMessage(L"/move <x> <y> <z> - teleports you with relative coordinates\n");
         return true;
     }
     else if(!wcscmp(msg, L"/coords")){
@@ -142,6 +154,7 @@ bool DLL_EXPORT HandleMessage(wchar_t msg[]){
     //Argument commands
     else{
         long long unsigned int targetx, targety, targetz;
+        long long unsigned int delta_x, delta_y, delta_z;
 
         if ( swscanf(msg, L"/tp %llu %llu %llu", &targetx, &targety, &targetz) == 3){
             *x = targetx;
@@ -159,6 +172,16 @@ bool DLL_EXPORT HandleMessage(wchar_t msg[]){
             CommandsModMessage(response);
             return true;
         }
+
+        else if ( swscanf(msg, L"/move %llu %llu %llu", &delta_x, &delta_y, &delta_z) == 3){
+            *x += delta_x;
+            *y += delta_y;
+            *z += delta_z;
+            swprintf(response, L"Teleporting.\n");
+            CommandsModMessage(response);
+            return true;
+        }
+
 
     }
 
