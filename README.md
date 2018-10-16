@@ -30,3 +30,8 @@ For use with the Cube World Mod Launcher: https://github.com/ChrisMiuchiz/Cube-W
  
     /tpch <x> <y>
     
+ ---
+ #### Teleport with an offset
+ 
+    /move <x> <y> <z>
+    
