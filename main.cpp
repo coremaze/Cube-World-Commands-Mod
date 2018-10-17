@@ -102,6 +102,15 @@ void DLL_EXPORT PrintMessage(wchar_t message[], int r, int g, int b){
     ASMPrintMessage();
 }
 
+void SetTime(signed int hour, signed int minute){
+    DWORD worldTimePtr = (DWORD)(base + 0x36B1C8);
+    worldTimePtr = *(DWORD*)worldTimePtr; //cube::GameController
+    worldTimePtr += 0x2E4; //cube::World
+    worldTimePtr += 0x80015C; //cube::World::time
+
+    unsigned int* worldTime = (unsigned int*) worldTimePtr;
+    *worldTime = (hour * 60 * 60 * 1000) + (minute * 60 * 1000);// convert to miliseconds
+}
 
 void CommandsModMessage(wchar_t message[]){
     PrintMessage(L"[");
@@ -191,14 +200,7 @@ bool DLL_EXPORT HandleMessage(wchar_t buf[], unsigned int msg_size){
         }
 
         else if ( swscanf(msg, L"/settime %d:%d", &targetHour, &targetMinute) == 2){
-            DWORD worldTimePtr = (DWORD)(base + 0x36B1C8);
-            worldTimePtr = *(DWORD*)worldTimePtr; //cube::GameController
-            worldTimePtr += 0x2E4; //cube::World
-            worldTimePtr += 0x80015C; //cube::World::time
-
-            unsigned int* worldTime = (unsigned int*) worldTimePtr;
-
-            *worldTime = (targetHour * 60 * 60 * 1000) + (targetMinute * 60 * 1000);// convert to miliseconds
+            SetTime(targetHour, targetMinute);
             swprintf(response, L"Changing time to %d:%02d.\n", targetHour % 24, targetMinute % 60);
             CommandsModMessage(response);
             return true;
