@@ -1,7 +1,6 @@
 #undef __STRICT_ANSI__
 #include "main.h"
 #include <iostream>
-#include <fstream>
 
 
 UINT_PTR base;
@@ -110,6 +109,12 @@ void CommandsModMessage(wchar_t message[]){
     PrintMessage(L"] ");
     PrintMessage(message);
 }
+void CommandHelpMessage(wchar_t* command, wchar_t* details){
+    PrintMessage(command, 50, 255, 127);
+    PrintMessage(L" - ");
+    PrintMessage(details);
+    PrintMessage(L"\n");
+}
 
 bool DLL_EXPORT HandleMessage(wchar_t buf[], unsigned int msg_size){
     wchar_t response[255];
@@ -128,12 +133,13 @@ bool DLL_EXPORT HandleMessage(wchar_t buf[], unsigned int msg_size){
     //Display commands
     if (!wcscmp(msg, L"/help")){
         CommandsModMessage(L"List of commands:\n");
-        PrintMessage(L"/help - displays this\n");
-        PrintMessage(L"/coords - displays your absolute coordinates\n");
-        PrintMessage(L"/chunks - displays your coordinates in terms of chunks\n");
-        PrintMessage(L"/tp <x> <y> <z> - teleports you in terms of absolute coordinates\n");
-        PrintMessage(L"/tpch <chunk x> <chunk y> - teleports you in terms of chunks\n");
-        PrintMessage(L"/move <x> <y> <z> - teleports you with relative coordinates\n");
+        CommandHelpMessage(L"/help", L"displays this");
+        CommandHelpMessage(L"/coords", L"displays your absolute coordinates");
+        CommandHelpMessage(L"/chunks", L"displays your coordinates in terms of chunks");
+        CommandHelpMessage(L"/tp <x> <y> <z>", L"teleports you in terms of absolute coordinates");
+        CommandHelpMessage(L"/tpch <chunk x> <chunk y>", L"teleports you in terms of chunks");
+        CommandHelpMessage(L"/move <x> <y> <z>", L"teleports you with relative coordinates");
+        CommandHelpMessage(L"/settime <hour>:<minute>", L"Sets the time of day");
         return true;
     }
     else if(!wcscmp(msg, L"/coords")){
@@ -155,6 +161,8 @@ bool DLL_EXPORT HandleMessage(wchar_t buf[], unsigned int msg_size){
     else{
         long long unsigned int targetx, targety, targetz;
         long long unsigned int delta_x, delta_y, delta_z;
+        signed int targetHour;
+        signed int targetMinute;
 
         if ( swscanf(msg, L"/tp %llu %llu %llu", &targetx, &targety, &targetz) == 3){
             *x = targetx;
@@ -178,6 +186,20 @@ bool DLL_EXPORT HandleMessage(wchar_t buf[], unsigned int msg_size){
             *y += delta_y;
             *z += delta_z;
             swprintf(response, L"Teleporting.\n");
+            CommandsModMessage(response);
+            return true;
+        }
+
+        else if ( swscanf(msg, L"/settime %d:%d", &targetHour, &targetMinute) == 2){
+            DWORD worldTimePtr = (DWORD)(base + 0x36B1C8);
+            worldTimePtr = *(DWORD*)worldTimePtr; //cube::GameController
+            worldTimePtr += 0x2E4; //cube::World
+            worldTimePtr += 0x80015C; //cube::World::time
+
+            unsigned int* worldTime = (unsigned int*) worldTimePtr;
+
+            *worldTime = (targetHour * 60 * 60 * 1000) + (targetMinute * 60 * 1000);// convert to miliseconds
+            swprintf(response, L"Changing time to %d:%02d.\n", targetHour % 24, targetMinute % 60);
             CommandsModMessage(response);
             return true;
         }
