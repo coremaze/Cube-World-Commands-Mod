@@ -35,3 +35,8 @@ For use with the Cube World Mod Launcher: https://github.com/ChrisMiuchiz/Cube-W
  
     /move <x> <y> <z>
     
+ ---
+ #### Set time
+ 
+    /settime <hour>:<minute>
+    
