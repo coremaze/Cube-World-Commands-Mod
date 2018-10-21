@@ -25,37 +25,6 @@ DWORD defaultMessagePtr = (DWORD)&defaultMessage;
 char msgObject[255];
 DWORD msgObjectPtr = (DWORD)&msgObject;
 
-_declspec(naked) void DLL_EXPORT ASMHandleMessage(){
-
-    asm("mov eax, [_base]");
-    asm("add eax, 0x36B1C8");
-    asm("mov eax, [eax]"); //eax points to gamecontroller
-    asm("mov eax, dword ptr [eax + 0x800A14]"); //eax points to ChatWidget
-    asm("mov eax, dword ptr [eax + 0x178]"); //get message size
-    asm("push eax");
-
-    asm("lea eax, [ebp - 0x128 + 0x4]");
-    asm("mov eax, [eax]"); //get message
-    asm("push eax");
-
-    asm("call [_HandleMessagePtr]");
-
-    asm("cmp eax, 0"); //message ptr
-    asm("je 0f");
-
-    asm("1:");
-    asm("mov ecx, [_base]"); //jump to end
-    asm("add ecx, 0x7E6BF");
-    asm("jmp ecx");
-
-
-    asm("0:"); //exit normally
-    asm("mov eax, [_base]"); //jump back
-    asm("add eax, 0x7E621");
-    asm("cmp dword ptr [edi + 0x8006CC], 0"); //original comparison
-    asm("jmp eax");
-}
-
 void DLL_EXPORT ASMPrintMessage(){
 
     asm("push [_defaultMessagePtr]");
@@ -125,10 +94,8 @@ void CommandHelpMessage(wchar_t* command, wchar_t* details){
     PrintMessage(L"\n");
 }
 
-bool DLL_EXPORT HandleMessage(wchar_t buf[], unsigned int msg_size){
+bool __stdcall DLL_EXPORT HandleMessage(wchar_t msg[], unsigned int msg_size){
     wchar_t response[255];
-    wchar_t msg[1024] = { 0 };
-    memcpy(msg, buf, msg_size * 2); //the message should be null terminated
 
     DWORD entityaddr = (DWORD)(base + 0x36b1c8);
     entityaddr = *(DWORD*)entityaddr;
@@ -225,6 +192,15 @@ void WriteJMP(BYTE* location, BYTE* newFunction){
 	VirtualProtect(location, 5, dwOldProtection, &dwOldProtection);
 }
 
+typedef bool (__stdcall *ChatEventCallback)(wchar_t buf[], unsigned int msg_size);
+typedef void (*RegisterChatEventCallback_t)(ChatEventCallback cb);
+DWORD WINAPI DLL_EXPORT RegisterCallbacks(){
+        HMODULE modManagerDLL = LoadLibraryA("CallbackManager.dll");
+        auto RegisterChatEventCallback = (RegisterChatEventCallback_t)GetProcAddress(modManagerDLL, "RegisterChatEventCallback");
+        RegisterChatEventCallback((ChatEventCallback)HandleMessage);
+        return 0;
+}
+
 
 extern "C" DLL_EXPORT BOOL APIENTRY DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
@@ -233,10 +209,9 @@ extern "C" DLL_EXPORT BOOL APIENTRY DllMain(HINSTANCE hinstDLL, DWORD fdwReason,
     {
 
         case DLL_PROCESS_ATTACH:
-            WriteJMP((BYTE*)(base + 0x7E61A), (BYTE*)&ASMHandleMessage);
-
+            CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)RegisterCallbacks, 0, 0, NULL);
             break;
-;
+
     }
     return TRUE;
 }
