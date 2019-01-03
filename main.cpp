@@ -1,5 +1,5 @@
 #undef __STRICT_ANSI__
-#include "main.h"
+#include <windows.h>
 #include <iostream>
 
 
@@ -25,7 +25,7 @@ DWORD defaultMessagePtr = (DWORD)&defaultMessage;
 char msgObject[255];
 DWORD msgObjectPtr = (DWORD)&msgObject;
 
-void DLL_EXPORT ASMPrintMessage(){
+void __declspec(dllexport) ASMPrintMessage(){
 
     asm("push [_defaultMessagePtr]");
     asm("mov ecx, [_msgObjectPtr]");
@@ -54,7 +54,7 @@ void DLL_EXPORT ASMPrintMessage(){
 
 }
 
-void DLL_EXPORT PrintMessage(wchar_t message[]){
+void __declspec(dllexport) PrintMessage(wchar_t message[]){
 
     wcsncpy(defaultMessage, message, 255);
     defaultColor.red = 1.0;
@@ -63,7 +63,7 @@ void DLL_EXPORT PrintMessage(wchar_t message[]){
     defaultColor.alpha = 1.0;
     ASMPrintMessage();
 }
-void DLL_EXPORT PrintMessage(wchar_t message[], int r, int g, int b){
+void __declspec(dllexport) PrintMessage(wchar_t message[], int r, int g, int b){
     wcsncpy(defaultMessage, message, 255);
     defaultColor.red = r / 255.0;
     defaultColor.green = g / 255.0;
@@ -94,7 +94,7 @@ void CommandHelpMessage(wchar_t* command, wchar_t* details){
     PrintMessage(L"\n");
 }
 
-bool __stdcall DLL_EXPORT HandleMessage(wchar_t msg[], unsigned int msg_size){
+bool __stdcall __declspec(dllexport) HandleMessage(wchar_t msg[], unsigned int msg_size){
     wchar_t response[255];
 
     DWORD entityaddr = (DWORD)(base + 0x36b1c8);
@@ -194,7 +194,7 @@ void WriteJMP(BYTE* location, BYTE* newFunction){
 
 typedef bool (__stdcall *ChatEventCallback)(wchar_t buf[], unsigned int msg_size);
 typedef void (*RegisterChatEventCallback_t)(ChatEventCallback cb);
-DWORD WINAPI DLL_EXPORT RegisterCallbacks(){
+DWORD WINAPI __declspec(dllexport) RegisterCallbacks(){
         HMODULE modManagerDLL = LoadLibraryA("CallbackManager.dll");
         auto RegisterChatEventCallback = (RegisterChatEventCallback_t)GetProcAddress(modManagerDLL, "RegisterChatEventCallback");
         RegisterChatEventCallback((ChatEventCallback)HandleMessage);
@@ -202,7 +202,7 @@ DWORD WINAPI DLL_EXPORT RegisterCallbacks(){
 }
 
 
-extern "C" DLL_EXPORT BOOL APIENTRY DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
+extern "C" __declspec(dllexport) BOOL APIENTRY DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
     base = (UINT_PTR)GetModuleHandle(NULL);
     switch (fdwReason)
