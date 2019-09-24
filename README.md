@@ -18,3 +18,9 @@ For use with the Cube World Mod Launcher: https://github.com/ChrisMiuchiz/Cube-W
  
     /settime <hour>:<minute>
     
+ ---
+ 
+ #### Set name
+ 
+    /name <name>
+    
