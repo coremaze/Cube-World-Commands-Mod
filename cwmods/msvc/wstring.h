@@ -1,5 +1,5 @@
-#ifndef WSTRING_H
-#define WSTRING_H
+#ifndef MSVC_WSTRING_H
+#define MSVC_WSTRING_H
 #include <cstdint>
 
 namespace msvc {
@@ -13,10 +13,10 @@ namespace msvc {
             int64_t size;
             int64_t cap;
 
-            wstring(wchar_t* str);
+            wstring(const wchar_t* str);
             ~wstring();
     };
 };
 
 
-#endif // WSTRING_H
+#endif // MSVC_WSTRING_H
