@@ -1,6 +1,5 @@
 #include "main.h"
 #include "cwmods/cwmods.h"
-#include "cwmods/common/LongVector3.h"
 #include <wchar.h>
 #include <stdio.h>
 #include <string.h>
@@ -59,8 +58,12 @@ void InitHomeMap(){
             std::string x = elements.at(1);
             std::string y = elements.at(2);
             std::string z = elements.at(3);
-            std::vector<long long> coords {std::stoll(x), std::stoll(y), std::stoll(z)};
-            home_map[name] = coords;
+            try {
+                std::vector<long long> coords {std::stoll(x), std::stoll(y), std::stoll(z)};
+                home_map[name] = coords;
+            } catch ( ... ) {
+                continue;
+            }
         }
     }
 }
