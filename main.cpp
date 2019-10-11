@@ -191,7 +191,7 @@ void Help(int page) {
         PrintCommand(L"/tpmap", L"", L"Teleport to cursor position on map");
         PrintCommand(L"/sethome", L"<alias>", L"Set player position as home");
         PrintCommand(L"/home", L"<alias>", L"Teleport to home position by alias");
-        PrintCommand(L"/gui", L"chat <width> <height>", L"Set GUI Widget size");
+        //PrintCommand(L"/gui", L"chat <width> <height>", L"Set GUI Widget size");
         break;
     default:
         CommandsModMessage( L"Invalid page number!\n");
@@ -251,6 +251,7 @@ EXPORT int HandleChat(wchar_t* msg) {
         return 1;
 
     } else if ( swscanf(msg, L"/gui chat %d %d", &targetx, &targety) == 2) {
+        // TODO We can't yet update the position of chat without doing things like changing the window size.
         game->gui.chat_widget->width = targetx;
         game->gui.chat_widget->height = targety;
         CommandsModMessage(L"GUI Chat Widget size changed.\n");
@@ -265,31 +266,27 @@ EXPORT int HandleChat(wchar_t* msg) {
             return 1;
         }
         for(cube::Creature* creature: game->world->creatures) {
-            if (stricmp(creature->name, cName) == 0) {
+            if (!stricmp(creature->name, cName)) {
                 cube::Creature* player = game->GetPlayer();
-                player->position.x = creature->position.x;
-                player->position.y = creature->position.y;
-                player->position.z = creature->position.z;
+                player->position = creature->position;
                 CommandsModMessage(L"Teleporting.\n");
                 return 1;
 
             }
         }
         CommandsModMessage(L"Target not found.\n");
-        return 0;
+        return 1;
 
     } else if (!wcscmp(msg, L"/tpmap")) {
         if(game->worldmap->cursor_position.x != 0x7FFFFFFF0000) {
             LongVector3 position = game->worldmap->cursor_position;
             cube::Creature* player = game->GetPlayer();
-            player->position.x = position.x;
-            player->position.y = position.y;
-            player->position.z = position.z;
+            player->position = position;
             CommandsModMessage(L"Teleporting.\n");
             return 1;
         }
         CommandsModMessage(L"Please open map.\n");
-        return 0;
+        return 1;
 
     } else if ( !wcsncmp(msg, L"/sethome ", 9) ) {
         wchar_t* wideAlias = &msg[9];
