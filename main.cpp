@@ -239,14 +239,16 @@ EXPORT int HandleChat(wchar_t* msg) {
 
     } else if (!wcscmp(msg, L"/coords")) {
         cube::Creature* player = game->GetPlayer();
-        swprintf(response, L"World coordinates:\nX: %lld\nY: %lld\nZ: %lld\n", player->position.x, player->position.y, player->position.z);
+        LongVector3* position = &player->entity_data.position;
+        swprintf(response, L"World coordinates:\nX: %lld\nY: %lld\nZ: %lld\n", position->x, position->y, position->z);
         CommandsModMessage(response);
         return 1;
 
     } else if ( swscanf(msg, L"/tp %d %d", &targetx, &targety) == 2) {
         cube::Creature* player = game->GetPlayer();
-        player->position.x = MapCoordToDots(targetx);
-        player->position.y = MapCoordToDots(targety);
+        LongVector3* position = &player->entity_data.position;
+        position->x = MapCoordToDots(targetx);
+        position->y = MapCoordToDots(targety);
         CommandsModMessage(L"Teleporting.\n");
         return 1;
 
@@ -266,9 +268,9 @@ EXPORT int HandleChat(wchar_t* msg) {
             return 1;
         }
         for(cube::Creature* creature: game->world->creatures) {
-            if (!stricmp(creature->name, cName)) {
+            if (!stricmp(creature->entity_data.name, cName)) {
                 cube::Creature* player = game->GetPlayer();
-                player->position = creature->position;
+                player->entity_data.position = creature->entity_data.position;
                 CommandsModMessage(L"Teleporting.\n");
                 return 1;
 
@@ -281,7 +283,7 @@ EXPORT int HandleChat(wchar_t* msg) {
         if(game->worldmap->cursor_position.x != 0x7FFFFFFF0000) {
             LongVector3 position = game->worldmap->cursor_position;
             cube::Creature* player = game->GetPlayer();
-            player->position = position;
+            player->entity_data.position = position;
             CommandsModMessage(L"Teleporting.\n");
             return 1;
         }
@@ -298,7 +300,8 @@ EXPORT int HandleChat(wchar_t* msg) {
         }
         std::string alias(cAlias);
         cube::Creature* player = game->GetPlayer();
-        SetHomeMap(alias, player->position.x, player->position.y, player->position.z);
+        LongVector3* position = &player->entity_data.position;
+        SetHomeMap(alias, position->x, position->y, position->z);
         CommandsModMessage(L"Done.\n");
         return 1;
 
@@ -317,9 +320,10 @@ EXPORT int HandleChat(wchar_t* msg) {
             return 1;
         }
         cube::Creature* player = game->GetPlayer();
-        player->position.x = position[0];
-        player->position.y = position[1];
-        player->position.z = position[2];
+        LongVector3* playerPosition = &player->entity_data.position;
+        playerPosition->x = position[0];
+        playerPosition->y = position[1];
+        playerPosition->z = position[2];
         CommandsModMessage(L"Teleporting.\n");
         return 1;
 
@@ -334,8 +338,8 @@ EXPORT int HandleChat(wchar_t* msg) {
         } else if (len >= 16) {
             CommandsModMessage(L"Name too long!\n");
         } else {
-            strcpy(player->name, newName);
-            swprintf(response, L"You are now known as %s.\n", player->name);
+            strcpy(player->entity_data.name, newName);
+            swprintf(response, L"You are now known as %s.\n", player->entity_data.name);
             CommandsModMessage(response);
         }
         return 1;
