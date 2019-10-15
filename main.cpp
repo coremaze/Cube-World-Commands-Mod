@@ -410,7 +410,7 @@ EXPORT int HandleChat(wchar_t* msg) {
 }
 
 
-EXPORT HandleP2PRequest(long long steamID) {
+EXPORT int HandleP2PRequest(long long steamID) {
     wchar_t response[256];
 
     if (P2PRequestLogging) {
