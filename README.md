@@ -14,6 +14,12 @@ For use with the Cube World Mod Launcher: https://github.com/ChrisMiuchiz/Cube-W
  
  ---
  
+ #### Teleport to another player
+
+    /tp <name>
+ 
+ ---
+ 
  #### Set time
  
     /settime <hour>:<minute>
@@ -66,4 +72,23 @@ For use with the Cube World Mod Launcher: https://github.com/ChrisMiuchiz/Cube-W
  
     /server log
     
+---
  
+ #### Teleport to your cursor position on the map
+ 
+    /tpmap
+	
+---
+ 
+ #### Create a waypoint/home you can teleport to 
+ 
+    /sethome <alias>
+	
+---
+ 
+ #### Teleport to a waypoint/home
+ 
+    /home <alias>
+    
+    
+    
