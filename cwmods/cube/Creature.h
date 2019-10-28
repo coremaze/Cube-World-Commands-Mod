@@ -5,15 +5,16 @@
 #include "../common/LongVector3.h"
 #include "../common/FloatVector3.h"
 #include "../common/ByteRGBA.h"
-#include "../msvc/vector.h"
+#include <vector>
 #include "ItemStack.h"
+#include <windows.h>
 
 namespace cube {
     class Creature {
-
+	public:
         // cube::Creature::EntityData
         class EntityData {
-
+		public:
             // cube::Creature::EntityData::Appearance
             class Appearance {
                 public:
@@ -55,8 +56,6 @@ namespace cube {
                 FloatVector3 wings_position;
             };
 
-
-            public:
             LongVector3 position;
             float pitch;
             float roll;
@@ -134,7 +133,7 @@ namespace cube {
             __int64 id;
             cube::Creature::EntityData entity_data;
             _BYTE gap968[112];
-            msvc::vector<msvc::vector<cube::ItemStack>> inventory_tabs;
+            std::vector<std::vector<cube::ItemStack>> inventory_tabs;
             _BYTE gapA08[164];
             int gold;
             _BYTE gapAB0[172];

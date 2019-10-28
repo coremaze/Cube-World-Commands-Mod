@@ -1,7 +1,6 @@
 #ifndef HOST_H
 #define HOST_H
 
-#include "../msvc/string.h"
 #include "World.h"
 namespace cube {
 class Host {

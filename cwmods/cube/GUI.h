@@ -172,6 +172,9 @@ namespace cube {
             _BYTE gap5A8[24];
             cube::Game *game;
             char pad_05C8[8];
+
+
+			void UpdateResolution(signed int width, signed int height);
         };
 }
 

@@ -1,12 +1,12 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#include "../msvc/string.h"
+#include <string>
 #include "Creature.h"
 #include "Database.h"
 #include <windows.h>
 #include "../IDA/types.h"
-#include "../msvc/list.h"
+#include <list>
 #include "SpriteManager.h"
 
 namespace cube {
@@ -16,13 +16,13 @@ class World {
         int day;
         float time;
         _BYTE gap10[48];
-        msvc::list<cube::Creature*> creatures;
+        std::list<cube::Creature*> creatures;
         _BYTE gap50[32];
         cube::SpriteManager *spritemanager;
         _BYTE gap78[312];
         cube::World *self_ptr;
         _BYTE gap1A8[72];
-        msvc::string world_name;
+        std::string world_name;
         int seed;
         _BYTE gap224[404];
         cube::Database database;

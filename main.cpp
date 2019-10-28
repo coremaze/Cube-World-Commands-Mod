@@ -11,7 +11,7 @@
 int serverAccessState = 0;
 bool P2PRequestLogging = false;
 bool blacklisting = false;
-std::map<std::string, std::vector<long long>> home_map;
+std::map<std::string, std::vector<long long>>* home_map;
 
 float GetMilliseconds(int hour, int minute) {
     return (hour * 60 * 60 * 1000) + (minute * 60 * 1000);
@@ -45,6 +45,7 @@ std::vector<std::string> split(const std::string &s, char delim) {
 }
 
 void InitHomeMap(){
+	home_map = new std::map<std::string, std::vector<long long>>();
     std::ifstream myfile("Mods\\CommandsMod\\home.txt");
     if(!myfile.is_open()) {
         return;
@@ -60,7 +61,7 @@ void InitHomeMap(){
             std::string z = elements.at(3);
             try {
                 std::vector<long long> coords {std::stoll(x), std::stoll(y), std::stoll(z)};
-                home_map[name] = coords;
+                home_map->insert_or_assign(name, coords);
             } catch ( ... ) {
                 continue;
             }
@@ -70,10 +71,10 @@ void InitHomeMap(){
 
 void SetHomeMap(std::string alias, long long x, long long y, long long z) {
     std::vector<long long> coords {x, y, z};
-    home_map[alias] = coords;
+	home_map->insert_or_assign(alias, coords);
     std::ofstream outfile("Mods\\CommandsMod\\home.txt");
     if(outfile.is_open()) {
-        for(auto item = home_map.begin();item != home_map.end(); item++) {
+        for(auto item = home_map->begin();item != home_map->end(); item++) {
             auto value = item->second;
             outfile<<item->first<<' '<<item->second[0]<<' '<<item->second[1]<<' '<<item->second[2]<<std::endl;
         }
@@ -82,8 +83,8 @@ void SetHomeMap(std::string alias, long long x, long long y, long long z) {
 }
 
 std::vector<long long> GetHomePosition(std::string alias) {
-    auto iter = home_map.find(alias);
-    if(iter != home_map.end()) {
+    auto iter = home_map->find(alias);
+    if(iter != home_map->end()) {
         return iter->second;
     }
     return std::vector<long long>();
@@ -191,7 +192,7 @@ void Help(int page) {
         PrintCommand(L"/tpmap", L"", L"Teleport to cursor position on map");
         PrintCommand(L"/sethome", L"<alias>", L"Set player position as home");
         PrintCommand(L"/home", L"<alias>", L"Teleport to home position by alias");
-        //PrintCommand(L"/gui", L"chat <width> <height>", L"Set GUI Widget size");
+        PrintCommand(L"/gui", L"chat <width> <height>", L"Set GUI Widget size");
         break;
     default:
         CommandsModMessage( L"Invalid page number!\n");
@@ -253,9 +254,9 @@ EXPORT int HandleChat(wchar_t* msg) {
         return 1;
 
     } else if ( swscanf(msg, L"/gui chat %d %d", &targetx, &targety) == 2) {
-        // TODO We can't yet update the position of chat without doing things like changing the window size.
         game->gui.chat_widget->width = targetx;
         game->gui.chat_widget->height = targety;
+		game->gui.UpdateResolution(game->width, game->height);
         CommandsModMessage(L"GUI Chat Widget size changed.\n");
         return 1;
 

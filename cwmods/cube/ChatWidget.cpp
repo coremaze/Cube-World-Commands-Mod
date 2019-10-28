@@ -2,8 +2,8 @@
 #include "../cwmods.h"
 
 void cube::ChatWidget::PrintMessage(const wchar_t* message, FloatRGBA* color){
-    msvc::wstring str(message);
-    ((void(*)(cube::ChatWidget*, msvc::wstring*, FloatRGBA*))CWBase()+0x26BF10)(this, &str, color);
+    std::wstring str(message);
+    ((void(*)(cube::ChatWidget*, std::wstring*, FloatRGBA*))CWOffset(0x26BF10))(this, &str, color);
 }
 
 void cube::ChatWidget::PrintMessage(const wchar_t* message) {
