@@ -17,19 +17,7 @@ namespace plasma {
 			plasma::ContinuousAttribute<plasma::Vector<2, float>> pivot;
 			__int64 field_290;
 			__int64 field_298;
-			float x_scale;
-			float depth_rotation;
-			float x_cut_off;
-			float the_fuck;
-			float slant;
-			float y_scale;
-			float y_cut_off;
-			float wtf;
-			__int64 field_2C0;
-			__int64 field_2C8;
-			float x_position;
-			float y_position;
-			__int64 field_2D8;
+			plasma::Matrix<float> matrix;
 			__int64 field_2E0;
 			__int64 field_2E8;
 			__int64 field_2F0;
@@ -41,5 +29,7 @@ namespace plasma {
 			__int64 field_320;
         };
 }
+
+static_assert(sizeof(plasma::Transformation) == 0x328, "plasma::Transformation is not the correct size.");
 
 #endif // PLASMA_TRANSFORMATION_H

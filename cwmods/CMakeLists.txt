@@ -9,12 +9,17 @@ project("CWSDK" VERSION "1.0.0")
 add_library (CWSDK 
     cwmods.cpp
     common/ByteRGBA.cpp
+    common/DoubleVector3.cpp
     common/FloatRGBA.cpp
+    common/FloatVector2.cpp
     common/FloatVector3.cpp
     common/IntVector2.cpp
     common/LongVector3.cpp
+    common/Matrix4.cpp
+    cube/Block.cpp
     cube/ChatWidget.cpp
     cube/Client.cpp
+    cube/Controls.cpp
     cube/Creature.cpp
     cube/Database.cpp
     cube/Field.cpp
@@ -23,15 +28,27 @@ add_library (CWSDK
     cube/Host.cpp
     cube/Item.cpp
     cube/ItemStack.cpp
+    cube/MapOverlayWidget.cpp
+    cube/MultiplayerWidget.cpp
+    cube/Music.cpp
+    cube/Options.cpp
+    cube/ServerUpdates.cpp
     cube/Speech.cpp
     cube/Spirit.cpp
+    cube/Sprite.cpp
     cube/SpriteManager.cpp
     cube/World.cpp
     cube/WorldMap.cpp
+    cube/XAudio2Engine.cpp
     cube/Zone.cpp
     gfx/Chunk.cpp
     gfx/D3D11Graphics.cpp
+    gfx/D3D11IndexBuffer.cpp
     gfx/D3D11Renderer.cpp
+    gfx/D3D11VertexBuffer.cpp
+    gfx/IndexBuffer.cpp
+    gfx/VertexBuffer.cpp
+    msvc/_Thrd_t.cpp
     plasma/Array.cpp
     plasma/Attribute.cpp
     plasma/ContinuousAttribute.cpp
@@ -40,10 +57,12 @@ add_library (CWSDK
     plasma/Display.cpp
     plasma/Engine.cpp
     plasma/Keyable.cpp
+    plasma/Matrix.cpp
     plasma/NamedObject.cpp
     plasma/Node.cpp
     plasma/Object.cpp
     plasma/ObjectManager.cpp
+    plasma/Transformation.cpp
     plasma/Vector.cpp
     plasma/Widget.cpp)
 target_include_directories (CWSDK PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

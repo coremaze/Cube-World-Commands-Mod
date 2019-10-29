@@ -232,7 +232,7 @@ EXPORT int HandleChat(wchar_t* msg) {
         else if (targetMS < minTime)
             targetMS = minTime;
 
-        world->time = targetMS;
+        world->SetTime(targetMS);
 
         swprintf(response, L"Changing time to %d:%02d.\n", targetHour % 24, targetMinute % 60);
         CommandsModMessage(response);

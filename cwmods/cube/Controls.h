@@ -1,6 +1,8 @@
 #ifndef CUBE_CONTROLS_H
 #define CUBE_CONTROLS_H
 
+#include <cstdint>
+
 namespace cube {
     class Controls {
 	public:
