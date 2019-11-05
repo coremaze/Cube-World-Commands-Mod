@@ -1,6 +1,8 @@
 # Cube-World-Commands-Mod
 For use with the Cube World Mod Launcher: https://github.com/ChrisMiuchiz/Cube-World-Mod-Launcher
 
+This mod implements additional commands into Cube World. It also adds the ability to use the arrow keys to get messages you have previously sent, like how most command lines work.
+
 ## Commands:
  #### Get help
   
