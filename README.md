@@ -2,7 +2,13 @@
 For use with the Cube World Mod Launcher: https://github.com/ChrisMiuchiz/Cube-World-Mod-Launcher
 
 ## Commands:
-  #### Display world coordinates
+ #### Get help
+  
+    /help [page number]
+
+ ---
+ 
+ #### Display world coordinates
   
     /coords
     
@@ -72,23 +78,34 @@ For use with the Cube World Mod Launcher: https://github.com/ChrisMiuchiz/Cube-W
  
     /server log
     
----
+ ---
  
  #### Teleport to your cursor position on the map
  
     /tpmap
 	
----
+ ---
  
  #### Create a waypoint/home you can teleport to 
  
     /sethome <alias>
 	
----
+ ---
  
  #### Teleport to a waypoint/home
  
     /home <alias>
-    
+	
+ ---
+
+ #### Change chat size
+ 
+    /gui chat <x size> <y size>
+	
+ ---
+ 
+ #### Use a skill - This will also tell you the identifier of the skill, if available.
+ 
+    /skill <id>
     
     
