@@ -11,6 +11,9 @@
 #include "SpriteManager.h"
 #include "ServerUpdates.h"
 #include "../common/IntVector2.h"
+#include "../common/LongVector3.h"
+#include "Block.h"
+#include "Projectile.h"
 
 namespace cube {
 	class Creature;
@@ -26,11 +29,11 @@ namespace cube {
 					std::map<void*, void*> some_map_size_0x28_1; // dropped rewards.
 			};
 
-			class ProjectileInfo
+			class AIManager
 			{
 				public:
 					World* world;
-					std::map<void*, void*> unk_map;
+					std::map<void*, void*> AIs;
 			};
 
 			class UnkVectors {
@@ -45,9 +48,9 @@ namespace cube {
 			cube::World::WorldState state;
 			std::list<cube::Creature*> creatures;
 			std::list<void*> unk_list_size_0x18;
-			std::list<void*> projectiles;
+			std::list<Projectile> projectiles;
 			cube::SpriteManager* spritemanager;
-			cube::World::ProjectileInfo projectiles_info;
+			cube::World::AIManager AI_manager;
 			cube::ServerUpdates some_subpackets_list;
 			std::map<void*, void*> unk_map_0x190;
 			std::map<void*, void*> unk_map_0x1A0;
@@ -92,7 +95,10 @@ namespace cube {
 			std::vector<void*> field_530;
 
 
-
+			// Methods
+			cube::Zone* GetZone(IntVector2 position);
+			cube::Zone* GetZone(int x, int y);
+			void SetBlock(LongVector3 block_pos, Block block);
 			void SetTime(float ms);
 			void SetTime(int ms);
 			void SetTime(int hour, int minute);

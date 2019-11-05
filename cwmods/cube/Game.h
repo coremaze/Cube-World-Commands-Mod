@@ -37,13 +37,15 @@ namespace cube {
 					std::map<uint32_t, std::wstring> key_full_names;
 					std::map<uint32_t, std::wstring> key_abbreviated_names;
 			};
-			void* vtable;
+			
+			virtual ~Game();
+
 			cube::World* world;
 			cube::WorldMap* worldmap;
 			gfx::D3D11Renderer* renderer;
-			__int64 plasma_engine;
+			plasma::D3D11Engine* plasma_engine;
 			__int64 xaudio2_engine;
-			cube::Game::KeyNames key_names;
+			cube::Game::KeyNames key_info;
 			cube::Speech speech;
 			cube::GUI gui;
 			cube::Host host;
@@ -86,7 +88,7 @@ namespace cube {
 			int map_zoom;
 			LongVector3 map_position_weird;
 			LongVector3 map_position;
-			bool map_flightmaster_mode_between_zooms;
+			bool map_zoom_has_changed;
 			char field_1E39;
 			char field_1E3A;
 			char field_1E3B;
@@ -136,6 +138,7 @@ namespace cube {
 			int current_character_slot;
 			cube::Database characters_db;
 			cube::Database database_1;
+
 
             cube::Creature* GetPlayer();
             void PrintMessage(const wchar_t* message, FloatRGBA* color);

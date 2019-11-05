@@ -55,4 +55,6 @@ namespace cube {
     };
 }
 
+static_assert(sizeof(cube::Controls) == 0xB8, "cube::Controls is not the correct size.");
+
 #endif // CUBE_CONTROLS_H

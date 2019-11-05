@@ -3,11 +3,12 @@
 
 #include "../IDA/types.h"
 #include "NamedObject.h"
-#include "Display.h"
-#include "Transformation.h"
-#include "Widget.h"
+#include "Vector.h"
 
 namespace plasma {
+	class Transformation;
+	class Display;
+	class Widget;
     class Node : public plasma::NamedObject {
         public:
 			__int64 field_38;
