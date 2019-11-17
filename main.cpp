@@ -1,5 +1,5 @@
 #include "main.h"
-#include "cwmods/cwmods.h"
+#include "cwmods/cwsdk.h"
 #include <wchar.h>
 #include <stdio.h>
 #include <string.h>
@@ -284,8 +284,8 @@ class Mod : GenericMod {
 
 		}
 		else if (swscanf(msg, L"/gui chat %d %d", &targetx, &targety) == 2) {
-			game->gui.chat_widget->width = targetx;
-			game->gui.chat_widget->height = targety;
+			game->gui.chat_widget->matrix._41 = targetx;
+			game->gui.chat_widget->matrix._42 = targety;
 			game->gui.UpdateResolution(game->width, game->height);
 			CommandsModMessage(L"GUI Chat Widget size changed.\n");
 			return 1;
