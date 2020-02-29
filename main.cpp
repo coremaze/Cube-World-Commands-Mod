@@ -213,6 +213,7 @@ class Mod : GenericMod {
 			CommandsModMessage(response);
 			PrintCommand(L"/gui", L"chat <width> <height>", L"Set GUI Widget size");
 			PrintCommand(L"/skill", L"<number>", L"Use a skill by its ID");
+			PrintCommand(L"/sound", L"<id> <volume> <speed>", L"Play a sound effect by its ID");
 			break;
 		default:
 			CommandsModMessage(L"Invalid page number!\n");
@@ -236,6 +237,9 @@ class Mod : GenericMod {
 		int page;
 		long long steamID;
 		unsigned int ability;
+		int soundID;
+		float soundVolume;
+		float soundSpeed;
 
 		if (!wcscmp(msg, L"/help")) {
 			Help(1);
@@ -465,6 +469,10 @@ class Mod : GenericMod {
 				swprintf(response, L"Using skill %d.\n", ability);
 			}
 			CommandsModMessage(response);
+			return 1;
+		}
+		else if (swscanf(msg, L"/sound %d %f %f", &soundID, &soundVolume, &soundSpeed) == 3) {
+			game->PlaySoundEffect((cube::Game::SoundEffect)soundID, soundVolume, soundSpeed);
 			return 1;
 		}
 		return 0;
