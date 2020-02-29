@@ -111,3 +111,10 @@ This mod implements additional commands into Cube World. It also adds the abilit
     /skill <id>
     
     
+ ---
+ 
+ #### Play a sound
+ 
+    /sound <id> <volume> <speed>
+    
+    
