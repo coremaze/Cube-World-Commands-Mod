@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.8)
 project(project_CommandsMod)
-add_subdirectory(cwmods)
+add_subdirectory(CWSDK)
 add_library (CommandsMod SHARED "main.cpp")
 target_link_libraries (CommandsMod LINK_PUBLIC CWSDK)

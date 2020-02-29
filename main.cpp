@@ -1,5 +1,5 @@
 #include "main.h"
-#include "cwmods/cwsdk.h"
+#include "CWSDK/cwsdk.h"
 #include <wchar.h>
 #include <stdio.h>
 #include <string.h>
