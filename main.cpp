@@ -381,7 +381,7 @@ class Mod : GenericMod {
 			}
 			else {
 				strcpy(player->entity_data.name, newName);
-				swprintf(response, L"You are now known as %s.\n", player->entity_data.name);
+				swprintf(response, L"You are now known as %s.\n", wideName);
 				CommandsModMessage(response);
 			}
 			return 1;
